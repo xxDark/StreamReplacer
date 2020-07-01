@@ -1,4 +1,4 @@
-rootProject.name = 'stream-unroll'
+rootProject.name = 'stream-replacer'
 include 'runtime'
 include 'transformer'
 include 'netty'

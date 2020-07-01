@@ -4,8 +4,10 @@ import me.xdark.streams.impl.AllMatchVisitor;
 import me.xdark.streams.impl.AnyMatchVisitor;
 import me.xdark.streams.impl.ArrayVisitor;
 import me.xdark.streams.impl.CloseVisitor;
+import me.xdark.streams.impl.CountVisitor;
 import me.xdark.streams.impl.EmptyVisitor;
 import me.xdark.streams.impl.ForEachVisitor;
+import me.xdark.streams.impl.IteratorVisitor;
 import me.xdark.streams.impl.LimitVisitor;
 import me.xdark.streams.impl.MapVisitor;
 import me.xdark.streams.impl.NoneMatchVisitor;
@@ -13,6 +15,7 @@ import me.xdark.streams.impl.OnCloseVisitor;
 import me.xdark.streams.impl.PeekVisitor;
 import me.xdark.streams.impl.SingleVisitor;
 import me.xdark.streams.impl.SkipVisitor;
+import me.xdark.streams.impl.SpliteratorVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -26,8 +29,7 @@ import java.util.Map;
 public final class StreamTransformer {
     private static final Map<VisitTarget, InstructionVisitor> VISITOR_MAP;
 
-    private StreamTransformer() {
-    }
+    private StreamTransformer() { }
 
     public static void transform(MethodNode method) {
         InsnList list = method.instructions;
@@ -87,6 +89,12 @@ public final class StreamTransformer {
         visitorMap.put(stream("anyMatch", "(Ljava/util/function/Predicate;)Z"), new AnyMatchVisitor());
         visitorMap.put(stream("allMatch", "(Ljava/util/function/Predicate;)Z"), new AllMatchVisitor());
         visitorMap.put(stream("noneMatch", "(Ljava/util/function/Predicate;)Z"), new NoneMatchVisitor());
+        visitorMap.put(stream("count", "()J"), new CountVisitor());
 
+        visitorMap.put(base("iterator", "()Ljava/util/Iterator;"), new IteratorVisitor());
+        visitorMap.put(stream("iterator", "()Ljava/util/Iterator;"), new IteratorVisitor());
+
+        visitorMap.put(base("spliterator", "()Ljava/util/Spliterator;"), new SpliteratorVisitor());
+        visitorMap.put(stream("spliterator", "()Ljava/util/Spliterator;"), new SpliteratorVisitor());
     }
 }

@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
-    private Runnable runnable;
+    protected StreamList<Runnable> close;
     protected boolean closed;
 
     public StreamList(int initialCapacity) {
@@ -82,14 +82,37 @@ public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         checkClosed();
         closed = true;
-        runnable.run();
+        StreamList<Runnable> close = this.close;
+        this.close = null;
+        if (close != null) {
+            Exception ex = null;
+            for (int i = 0, j = close.size(); i < j; i++) {
+                try {
+                    close.get(i).run();
+                } catch (Exception e) {
+                    if (ex == null) {
+                        ex = e;
+                    } else {
+                        ex.addSuppressed(e);
+                    }
+                }
+            }
+            close.close();
+            if (ex != null) {
+                throw ex;
+            }
+        }
     }
 
     public StreamList<E> onClose(Runnable runnable) {
-        this.runnable = runnable;
+        StreamList<Runnable> close = this.close;
+        if (close == null) {
+            close = this.close = StreamListProducer.newList(1);
+        }
+        close.add(runnable);
         return this;
     }
 

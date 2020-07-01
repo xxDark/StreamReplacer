@@ -10,8 +10,6 @@ import org.objectweb.asm.tree.MethodNode;
 public final class CountVisitor implements InstructionVisitor {
     @Override
     public void visitInstruction(MethodNode method, AbstractInsnNode insn) {
-        InsnList inject = new InsnList();
-        inject.add(new MethodInsnNode(INVOKEINTERFACE, "java/util/Collection", "size", "I()", false));
-        inject.add(new InsnNode(I2L));
+        method.instructions.set(insn, new MethodInsnNode(INVOKESTATIC, "me/xdark/streams/StreamSupport", "count", "(Ljava/util/Collection;)J", false));
     }
 }

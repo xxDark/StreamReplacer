@@ -2,7 +2,9 @@ package me.xdark.streams;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -15,7 +17,8 @@ import java.util.function.Predicate;
  * For internal use only.
  */
 public final class StreamSupport {
-    private StreamSupport() { }
+    private StreamSupport() {
+    }
 
     public static <R> Collection<R> empty() {
         return StreamListProducer.newList(0);
@@ -73,6 +76,18 @@ public final class StreamSupport {
 
     public static void close(Collection<?> collection) {
         ((StreamList<?>) collection).close();
+    }
+
+    public static long count(Collection<?> collection) {
+        return collection.size();
+    }
+
+    public static <T> Iterator<T> iterator(Collection<T> collection) {
+        return collection.iterator();
+    }
+
+    public static <T> Spliterator<T> spliterator(Collection<T> collection) {
+        return collection.spliterator();
     }
 
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<? super T> matcher) {

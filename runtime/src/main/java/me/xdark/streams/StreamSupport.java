@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Spliterator;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -87,6 +89,16 @@ public final class StreamSupport {
 
     public static <T> Spliterator<T> spliterator(Collection<T> collection) {
         return collection.spliterator();
+    }
+
+    public static <T> Optional<T> findFirst(Collection<T> collection) {
+        StreamList<T> list = (StreamList<T>) collection;
+        return list.isEmpty() ? Optional.empty() : Optional.ofNullable(list.get(0));
+    }
+
+    public static <T> Optional<T> findAny(Collection<T> collection) {
+        StreamList<T> list = (StreamList<T>) collection;
+        return list.isEmpty() ? Optional.empty() : Optional.ofNullable(list.get(ThreadLocalRandom.current().nextInt(list.size())));
     }
 
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<? super T> matcher) {

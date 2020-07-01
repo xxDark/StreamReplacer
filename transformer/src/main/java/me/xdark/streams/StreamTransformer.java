@@ -6,6 +6,8 @@ import me.xdark.streams.impl.ArrayVisitor;
 import me.xdark.streams.impl.CloseVisitor;
 import me.xdark.streams.impl.CountVisitor;
 import me.xdark.streams.impl.EmptyVisitor;
+import me.xdark.streams.impl.FindAnyVisitor;
+import me.xdark.streams.impl.FindFirstVisitor;
 import me.xdark.streams.impl.ForEachVisitor;
 import me.xdark.streams.impl.IteratorVisitor;
 import me.xdark.streams.impl.LimitVisitor;
@@ -40,8 +42,6 @@ public final class StreamTransformer {
                     InstructionVisitor visitor = visitFor(node);
                     if (visitor != null) {
                         visitor.visitInstruction(method, node);
-                    } else {
-                        System.out.println(node.owner + '.' + node.name + node.desc);
                     }
                 } else if (insn instanceof TypeInsnNode && insn.getOpcode() == Opcodes.CHECKCAST) {
                     String desc = ((TypeInsnNode)insn).desc;
@@ -96,5 +96,8 @@ public final class StreamTransformer {
 
         visitorMap.put(base("spliterator", "()Ljava/util/Spliterator;"), new SpliteratorVisitor());
         visitorMap.put(stream("spliterator", "()Ljava/util/Spliterator;"), new SpliteratorVisitor());
+
+        visitorMap.put(stream("findFirst", "()Ljava/util/Optional;"), new FindFirstVisitor());
+        visitorMap.put(stream("findAny", "()Ljava/util/Optional;"), new FindAnyVisitor());
     }
 }

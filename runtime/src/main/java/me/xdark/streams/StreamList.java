@@ -110,6 +110,8 @@ public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
     private void closeImpl(boolean checkClosed) throws Exception {
         if (checkClosed) {
             checkClosed();
+        }  else if (closed) {
+            return;
         }
         closed = true;
         StreamList<Runnable> close = this.close;

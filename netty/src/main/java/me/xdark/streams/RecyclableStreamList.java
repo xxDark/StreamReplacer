@@ -11,9 +11,12 @@ public final class RecyclableStreamList<E> extends StreamList<E> {
     }
 
     @Override
-    public void close() {
-        super.close();
-        clear();
-        handle.recycle(this);
+    public void close() throws Exception {
+        try {
+            super.close();
+        } finally {
+            clear();
+            handle.recycle(this);
+        }
     }
 }

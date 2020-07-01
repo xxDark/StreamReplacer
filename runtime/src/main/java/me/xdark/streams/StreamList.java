@@ -143,7 +143,7 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
         System.arraycopy(elementData, toIndex, elementData, fromIndex,
                 numMoved);
         int newSize = size - (toIndex - fromIndex);
-        Arrays.fill(elementData, newSize, size, numMoved);
+        Arrays.fill(elementData, newSize, size, null);
         size = newSize;
     }
 

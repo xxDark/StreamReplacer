@@ -1,0 +1,13 @@
+subprojects {
+    apply plugin: 'java'
+
+    group 'me.xdark'
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+

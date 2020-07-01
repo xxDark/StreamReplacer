@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':runtime')
+    implementation('io.netty:netty-common:4.1.50.Final')
+}

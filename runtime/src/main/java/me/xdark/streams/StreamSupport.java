@@ -17,8 +17,7 @@ import java.util.function.Predicate;
  * For internal use only.
  */
 public final class StreamSupport {
-    private StreamSupport() {
-    }
+    private StreamSupport() { }
 
     public static <R> Collection<R> empty() {
         return StreamListProducer.newList(0);
@@ -74,7 +73,7 @@ public final class StreamSupport {
         return ((StreamList<?>) collection).onClose(runnable);
     }
 
-    public static void close(Collection<?> collection) {
+    public static void close(Collection<?> collection) throws Exception {
         ((StreamList<?>) collection).close();
     }
 

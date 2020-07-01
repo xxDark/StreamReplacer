@@ -101,6 +101,11 @@ public final class StreamSupport {
         return list.isEmpty() ? Optional.empty() : Optional.ofNullable(list.get(ThreadLocalRandom.current().nextInt(list.size())));
     }
 
+    public static <T> Collection<T> concat(Collection<T> a, Collection<T> b) {
+        a.addAll(b);
+        return a;
+    }
+
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<? super T> matcher) {
         if (collection.isEmpty()) {
             return false;

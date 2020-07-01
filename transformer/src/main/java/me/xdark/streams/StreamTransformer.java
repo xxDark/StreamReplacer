@@ -4,6 +4,7 @@ import me.xdark.streams.impl.AllMatchVisitor;
 import me.xdark.streams.impl.AnyMatchVisitor;
 import me.xdark.streams.impl.ArrayVisitor;
 import me.xdark.streams.impl.CloseVisitor;
+import me.xdark.streams.impl.ConcatVisitor;
 import me.xdark.streams.impl.CountVisitor;
 import me.xdark.streams.impl.EmptyVisitor;
 import me.xdark.streams.impl.FindAnyVisitor;
@@ -99,5 +100,7 @@ public final class StreamTransformer {
 
         visitorMap.put(stream("findFirst", "()Ljava/util/Optional;"), new FindFirstVisitor());
         visitorMap.put(stream("findAny", "()Ljava/util/Optional;"), new FindAnyVisitor());
+
+        visitorMap.put(stream("concat", "(Ljava/util/stream/Stream;Ljava/util/stream/Stream;)Ljava/util/stream/Stream;"), new ConcatVisitor());
     }
 }

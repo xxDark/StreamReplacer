@@ -45,20 +45,32 @@ public final class StreamSupport {
         if (collection.isEmpty()) {
             return collection;
         }
-        ((StreamList) collection).replaceAll(o -> mapper.apply((T) o));
-        return collection;
+
+        StreamList list = (StreamList) collection;
+        for (int i = 0, j = list.size(); i < j; i++) {
+            list.set(i, mapper.apply((T) list.get(i)));
+        }
+        return list;
     }
 
     public static <T> Collection<T> filter(Collection<T> collection, Predicate<? super T> filter) {
         if (collection.isEmpty()) {
             return collection;
         }
-        collection.removeIf(t -> !filter.test(t));
+
+        StreamList<T> list = (StreamList<T>) collection;
+        for (int i = 0, j = list.size(); i < j; i++) {
+            if (filter.test(list.get(i))) {
+                list.remove(i--);
+                j -= 1;
+            }
+        }
         return collection;
     }
 
     public static <T> Collection<T> peek(Collection<T> collection, Consumer<? super T> consumer) {
-        collection.forEach(consumer);
+        StreamList<T> list = (StreamList<T>) collection;
+        for (int i= 0, j = list.size(); i < j; consumer.accept(list.get(i++)));
         return collection;
     }
 

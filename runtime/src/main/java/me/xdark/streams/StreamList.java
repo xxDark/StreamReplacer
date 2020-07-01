@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
-    private static final Object[] EMPTY_ELEMENTDATA = {};
+    static final Object[] EMPTY_ELEMENTDATA = {};
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
@@ -174,6 +174,14 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
         }
         close.add(runnable);
         return this;
+    }
+
+    void setElementData(Object[] elementData) {
+        this.elementData = elementData;
+    }
+
+    void setSize(int size) {
+        this.size = size;
     }
 
     @Override

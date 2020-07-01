@@ -8,6 +8,6 @@ import org.objectweb.asm.tree.MethodNode;
 public final class ForEachVisitor implements InstructionVisitor {
     @Override
     public void visitInstruction(MethodNode method, AbstractInsnNode insn) {
-        method.instructions.set(insn,new MethodInsnNode(INVOKEINTERFACE, "java/util/Collection", "forEach", "(Ljava/util/function/Consumer;)V", true));
+        method.instructions.set(insn, new MethodInsnNode(INVOKESTATIC, "me/xdark/streams/StreamSupport", "forEach", "(Ljava/util/Collection;Ljava/util/function/Consumer;)V"));
     }
 }

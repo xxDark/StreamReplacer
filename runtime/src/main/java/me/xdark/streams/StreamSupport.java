@@ -1,6 +1,5 @@
 package me.xdark.streams;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +30,7 @@ public final class StreamSupport {
     }
 
     public static <R> Collection<R> of(R r) {
-        List<R> list = StreamListProducer.newList(1);
+        StreamList<R> list = StreamListProducer.newList(1);
         list.add(r);
         return list;
     }
@@ -68,9 +67,12 @@ public final class StreamSupport {
         return collection;
     }
 
+    public static <T> void forEach(Collection<T> collection, Consumer<? super T> consumer) {
+        ((StreamList<T>)collection).forEach(consumer);
+    }
+
     public static <T> Collection<T> peek(Collection<T> collection, Consumer<? super T> consumer) {
-        StreamList<T> list = (StreamList<T>) collection;
-        for (int i= 0, j = list.size(); i < j; consumer.accept(list.get(i++)));
+        ((StreamList<T>)collection).forEach(consumer);
         return collection;
     }
 

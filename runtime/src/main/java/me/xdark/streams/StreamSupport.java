@@ -41,19 +41,12 @@ public final class StreamSupport {
 
     public static <T, R> Collection<R> map(Collection collection, Function<? super T, ? super R> mapper) {
         StreamList list = (StreamList) collection;
-        int j = list.size();
-        if (j == 0) {
-            return list;
-        }
-
-        for (int i = 0; i < j; i++) {
-            list.set(i, mapper.apply((T) list.get(i)));
-        }
-        return list;
+        return list.map(mapper);
     }
 
     public static <T> Collection<T> filter(Collection<T> collection, Predicate<? super T> filter) {
         StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
         int j = list.size();
         if (j == 0) {
             return list;
@@ -69,17 +62,22 @@ public final class StreamSupport {
     }
 
     public static <T> void forEach(Collection<T> collection, Consumer<? super T> consumer) {
-        ((StreamList<T>)collection).forEach(consumer);
+        StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
+        list.forEach(consumer);
     }
 
     public static <T> Collection<T> peek(Collection<T> collection, Consumer<? super T> consumer) {
-        ((StreamList<T>)collection).forEach(consumer);
-        return collection;
+        StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
+        list.forEach(consumer);
+        return list;
     }
 
     public static Collection<?> skip(Collection<?> collection, long v) {
         StreamList<?> list = (StreamList<?>) collection;
         list.removeRange(0, (int) Math.min(v, list.size()));
+        list.checkMap();
         return collection;
     }
 
@@ -89,6 +87,7 @@ public final class StreamSupport {
         if (v > size) {
             list.removeRange(size, (int) v);
         }
+        list.checkMap();
         return collection;
     }
 
@@ -105,30 +104,39 @@ public final class StreamSupport {
     }
 
     public static <T> Iterator<T> iterator(Collection<T> collection) {
-        return ((StreamList<T>)collection).iterator();
+        StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
+        return list.iterator();
     }
 
     public static <T> Spliterator<T> spliterator(Collection<T> collection) {
-        return ((StreamList<T>)collection).spliterator();
+        StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
+        return list.spliterator();
     }
 
     public static <T> Optional<T> findFirst(Collection<T> collection) {
         StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
         return list.isEmpty() ? Optional.empty() : Optional.ofNullable(list.get(0));
     }
 
     public static <T> Optional<T> findAny(Collection<T> collection) {
         StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
         return list.isEmpty() ? Optional.empty() : Optional.ofNullable(list.get(ThreadLocalRandom.current().nextInt(list.size())));
     }
 
     public static <T> Collection<T> concat(Collection<T> a, Collection<T> b) {
-        ((StreamList<T>)a).addAll(b);
+        StreamList<T> list = (StreamList<T>) a;
+        list.checkMap();
+        list.addAll(b);
         return a;
     }
 
     public static <R, T> Collection<R> flatMap(Collection<T> collection, Function<? super T, ? extends Collection<? extends R>> mapper) {
         StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
         for (int i = 0, j = list.size(); i < j; i++) {
             Collection<? extends R> s = mapper.apply(list.get(i));
             list.remove(i--);
@@ -140,6 +148,7 @@ public final class StreamSupport {
 
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<? super T> matcher) {
         StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
         int j = list.size();
         if (j == 0) {
             return false;
@@ -158,6 +167,7 @@ public final class StreamSupport {
 
     public static <T> boolean allMatch(Collection<T> collection, Predicate<? super T> matcher) {
         StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
         int j = list.size();
         if (j == 0) {
             return false;

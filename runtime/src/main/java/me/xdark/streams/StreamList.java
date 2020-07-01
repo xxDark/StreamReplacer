@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
@@ -18,6 +19,7 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
     private int size;
     protected StreamList<Runnable> close;
     protected boolean closed;
+    private Function<Object, Object> mapper;
 
     public StreamList(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -137,7 +139,6 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
         return a;
     }
 
-    @Override
     public void removeRange(int fromIndex, int toIndex) {
         int numMoved = size - toIndex;
         System.arraycopy(elementData, toIndex, elementData, fromIndex,
@@ -174,6 +175,33 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
         }
         close.add(runnable);
         return this;
+    }
+
+    public StreamList<E> map(Function mapper) {
+        if (this.mapper == null) {
+            this.mapper = mapper;
+        } else {
+            Function prev = this.mapper;
+            this.mapper = o -> mapper.apply(prev.apply(o));
+        }
+        return this;
+    }
+
+    public void checkMap() {
+        Function mapper = this.mapper;
+        if (mapper == null) {
+            return;
+        }
+        this.mapper = null;
+
+        int j = size;
+        if (j == 0) {
+            return;
+        }
+
+        for (int i = 0; i < j; i++) {
+            elementData[i] = mapper.apply(elementData[i]);
+        }
     }
 
     void setElementData(Object[] elementData) {

@@ -4,11 +4,13 @@ import me.xdark.streams.impl.AllMatchVisitor;
 import me.xdark.streams.impl.AnyMatchVisitor;
 import me.xdark.streams.impl.ArrayVisitor;
 import me.xdark.streams.impl.CloseVisitor;
+import me.xdark.streams.impl.CollectionStreamVisitor;
 import me.xdark.streams.impl.ConcatVisitor;
 import me.xdark.streams.impl.CountVisitor;
 import me.xdark.streams.impl.EmptyVisitor;
 import me.xdark.streams.impl.FindAnyVisitor;
 import me.xdark.streams.impl.FindFirstVisitor;
+import me.xdark.streams.impl.FlatMapVisitor;
 import me.xdark.streams.impl.ForEachVisitor;
 import me.xdark.streams.impl.IteratorVisitor;
 import me.xdark.streams.impl.LimitVisitor;
@@ -70,6 +72,10 @@ public final class StreamTransformer {
         return new VisitTarget("java/util/stream/Stream", name, desc);
     }
 
+    private static VisitTarget collectionStream(String collection, String method) {
+        return new VisitTarget(collection, method, "()Ljava/util/stream/Stream;");
+    }
+
     static {
         Map<VisitTarget, InstructionVisitor> visitorMap = VISITOR_MAP = new HashMap<>();
         visitorMap.put(stream("empty", "()Ljava/util/stream/Stream;"), new EmptyVisitor());
@@ -102,5 +108,10 @@ public final class StreamTransformer {
         visitorMap.put(stream("findAny", "()Ljava/util/Optional;"), new FindAnyVisitor());
 
         visitorMap.put(stream("concat", "(Ljava/util/stream/Stream;Ljava/util/stream/Stream;)Ljava/util/stream/Stream;"), new ConcatVisitor());
+        visitorMap.put(stream("flatMap", "(Ljava/util/function/Function;)Ljava/util/stream/Stream;"), new FlatMapVisitor());
+
+        visitorMap.put(collectionStream("java/util/Collection", "stream"), new CollectionStreamVisitor());
+        visitorMap.put(collectionStream("java/util/List", "stream"), new CollectionStreamVisitor());
+        visitorMap.put(collectionStream("java/util/Set", "stream"), new CollectionStreamVisitor());
     }
 }

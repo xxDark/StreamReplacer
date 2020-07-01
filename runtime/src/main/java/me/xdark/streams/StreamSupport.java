@@ -18,8 +18,13 @@ import java.util.function.Predicate;
  * <p>
  * For internal use only.
  */
+@SuppressWarnings("rawtypes")
 public final class StreamSupport {
     private StreamSupport() { }
+
+    public static <R> Collection<R> stream(Collection<R> collection) {
+        return collection instanceof StreamList ? collection : StreamListProducer.newList(collection);
+    }
 
     public static <R> Collection<R> empty() {
         return StreamListProducer.newList(0);
@@ -31,7 +36,8 @@ public final class StreamSupport {
         return list;
     }
 
-    public static <R> Collection<R> of(R[] rs) {
+    @SafeVarargs
+    public static <R> Collection<R> of(R... rs) {
         return StreamListProducer.newList(Arrays.asList(rs));
     }
 
@@ -104,6 +110,17 @@ public final class StreamSupport {
     public static <T> Collection<T> concat(Collection<T> a, Collection<T> b) {
         a.addAll(b);
         return a;
+    }
+
+    public static <R, T> Collection<R> flatMap(Collection<T> collection, Function<? super T, ? extends Collection<? extends R>> mapper) {
+        StreamList<T> list = (StreamList<T>) collection;
+        for (int i = 0, j = list.size(); i < j; i++) {
+            Collection<? extends R> s = mapper.apply(list.get(i));
+            list.remove(i--);
+            list.addAll((Collection) s);
+            j -= 1;
+        }
+        return (Collection<R>) list;
     }
 
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<? super T> matcher) {

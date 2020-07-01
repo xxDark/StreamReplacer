@@ -18,7 +18,7 @@ public final class StreamSupport {
     private StreamSupport() { }
 
     public static <R> Collection<R> empty() {
-        return new StreamList<>(0);
+        return StreamListProducer.newList(0);
     }
 
     public static <R> Collection<R> of(R r) {

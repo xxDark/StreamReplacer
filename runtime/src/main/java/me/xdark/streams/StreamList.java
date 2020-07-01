@@ -2,8 +2,15 @@ package me.xdark.streams;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
     protected StreamList<Runnable> close;
@@ -79,6 +86,112 @@ public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
         if (!isEmpty()) {
             super.clear();
         }
+    }
+
+    @Override
+    public void forEach(Consumer<? super E> action) {
+        checkClosed();
+        super.forEach(action);
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        checkClosed();
+        return super.contains(o);
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        checkClosed();
+        return super.retainAll(c);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        checkClosed();
+        return super.isEmpty();
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        checkClosed();
+        return super.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        checkClosed();
+        return super.lastIndexOf(o);
+    }
+
+    @Override
+    public int size() {
+        checkClosed();
+        return super.size();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        checkClosed();
+        return super.iterator();
+    }
+
+    @Override
+    public ListIterator<E> listIterator() {
+        checkClosed();
+        return super.listIterator();
+    }
+
+    @Override
+    public ListIterator<E> listIterator(int index) {
+        checkClosed();
+        return super.listIterator(index);
+    }
+
+    @Override
+    public Spliterator<E> spliterator() {
+        checkClosed();
+        return super.spliterator();
+    }
+
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        checkClosed();
+        return super.subList(fromIndex, toIndex);
+    }
+
+    @Override
+    public Object[] toArray() {
+        checkClosed();
+        return super.toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] a) {
+        checkClosed();
+        return super.toArray(a);
+    }
+
+    @Override
+    public void sort(Comparator<? super E> c) {
+        checkClosed();
+        super.sort(c);
+    }
+
+    @Override
+    public void trimToSize() {
+        checkClosed();
+        super.trimToSize();
+    }
+
+    @Override
+    public Stream<E> stream() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Stream<E> parallelStream() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

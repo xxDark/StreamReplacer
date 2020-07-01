@@ -34,7 +34,11 @@ public final class UnsafeStreamListProducer extends StreamListProducer {
     @Override
     protected <E> StreamList<E> _newList(E[] es) {
         StreamList<E> list = allocate();
-        list.setElementData(Arrays.copyOf(es, es.length, Object[].class));
+        Object[] a = es;
+        if (a.getClass() != Object[].class) {
+            a = Arrays.copyOf(a, a.length, Object[].class);
+        }
+        list.setElementData(a);
         list.setSize(es.length);
         return list;
     }

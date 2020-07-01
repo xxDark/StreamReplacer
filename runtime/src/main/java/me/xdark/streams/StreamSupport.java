@@ -35,30 +35,31 @@ public final class StreamSupport {
         return list;
     }
 
-    @SafeVarargs
-    public static <R> Collection<R> of(R... rs) {
-        return StreamListProducer.newList(rs);
+    public static <R> Collection<R> of(Object... rs) {
+        return (StreamList) StreamListProducer.newList(rs);
     }
 
     public static <T, R> Collection<R> map(Collection collection, Function<? super T, ? super R> mapper) {
-        if (collection.isEmpty()) {
-            return collection;
+        StreamList list = (StreamList) collection;
+        int j = list.size();
+        if (j == 0) {
+            return list;
         }
 
-        StreamList list = (StreamList) collection;
-        for (int i = 0, j = list.size(); i < j; i++) {
+        for (int i = 0; i < j; i++) {
             list.set(i, mapper.apply((T) list.get(i)));
         }
         return list;
     }
 
     public static <T> Collection<T> filter(Collection<T> collection, Predicate<? super T> filter) {
-        if (collection.isEmpty()) {
-            return collection;
+        StreamList<T> list = (StreamList<T>) collection;
+        int j = list.size();
+        if (j == 0) {
+            return list;
         }
 
-        StreamList<T> list = (StreamList<T>) collection;
-        for (int i = 0, j = list.size(); i < j; i++) {
+        for (int i = 0; i < j; i++) {
             if (filter.test(list.get(i))) {
                 list.remove(i--);
                 j -= 1;
@@ -100,15 +101,15 @@ public final class StreamSupport {
     }
 
     public static long count(Collection<?> collection) {
-        return collection.size();
+        return ((StreamList<?>)collection).size();
     }
 
     public static <T> Iterator<T> iterator(Collection<T> collection) {
-        return collection.iterator();
+        return ((StreamList<T>)collection).iterator();
     }
 
     public static <T> Spliterator<T> spliterator(Collection<T> collection) {
-        return collection.spliterator();
+        return ((StreamList<T>)collection).spliterator();
     }
 
     public static <T> Optional<T> findFirst(Collection<T> collection) {
@@ -122,7 +123,7 @@ public final class StreamSupport {
     }
 
     public static <T> Collection<T> concat(Collection<T> a, Collection<T> b) {
-        a.addAll(b);
+        ((StreamList<T>)a).addAll(b);
         return a;
     }
 
@@ -138,11 +139,12 @@ public final class StreamSupport {
     }
 
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<? super T> matcher) {
-        if (collection.isEmpty()) {
+        StreamList<T> list = (StreamList<T>) collection;
+        int j = list.size();
+        if (j == 0) {
             return false;
         }
-        StreamList<T> list = (StreamList<T>) collection;
-        for (int i = 0, j = list.size(); i < j; i++) {
+        for (int i = 0; i < j; i++) {
             if (matcher.test(list.get(i++))) {
                 return true;
             }
@@ -155,11 +157,12 @@ public final class StreamSupport {
     }
 
     public static <T> boolean allMatch(Collection<T> collection, Predicate<? super T> matcher) {
-        if (collection.isEmpty()) {
-            return true;
-        }
         StreamList<T> list = (StreamList<T>) collection;
-        for (int i = 0, j = list.size(); i < j; i++) {
+        int j = list.size();
+        if (j == 0) {
+            return false;
+        }
+        for (int i = 0; i < j; i++) {
             if (!matcher.test(list.get(i++))) {
                 return false;
             }

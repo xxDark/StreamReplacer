@@ -83,7 +83,34 @@ public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        checkClosed();
+        closeImpl(true);
+    }
+
+    public StreamList<E> onClose(Runnable runnable) {
+        StreamList<Runnable> close = this.close;
+        if (close == null) {
+            close = this.close = StreamListProducer.newList(1);
+        }
+        close.add(runnable);
+        return this;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        closeImpl(false);
+        super.finalize();
+    }
+
+    protected void checkClosed() {
+        if (closed) {
+            throw new IllegalStateException("StreamList is closed");
+        }
+    }
+
+    private void closeImpl(boolean checkClosed) throws Exception {
+        if (checkClosed) {
+            checkClosed();
+        }
         closed = true;
         StreamList<Runnable> close = this.close;
         this.close = null;
@@ -104,21 +131,6 @@ public class StreamList<E> extends ArrayList<E> implements AutoCloseable {
             if (ex != null) {
                 throw ex;
             }
-        }
-    }
-
-    public StreamList<E> onClose(Runnable runnable) {
-        StreamList<Runnable> close = this.close;
-        if (close == null) {
-            close = this.close = StreamListProducer.newList(1);
-        }
-        close.add(runnable);
-        return this;
-    }
-
-    protected void checkClosed() {
-        if (closed) {
-            throw new IllegalStateException("StreamList is closed");
         }
     }
 }

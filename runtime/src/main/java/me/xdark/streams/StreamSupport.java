@@ -38,7 +38,7 @@ public final class StreamSupport {
 
     @SafeVarargs
     public static <R> Collection<R> of(R... rs) {
-        return StreamListProducer.newList(Arrays.asList(rs));
+        return StreamListProducer.newList(rs);
     }
 
     public static <T, R> Collection<R> map(Collection collection, Function<? super T, ? super R> mapper) {
@@ -76,7 +76,7 @@ public final class StreamSupport {
 
     public static Collection<?> skip(Collection<?> collection, long v) {
         StreamList<?> list = (StreamList<?>) collection;
-        list.subList(0, (int) Math.min(v, list.size())).clear();
+        list.removeRange(0, (int) Math.min(v, list.size()));
         return collection;
     }
 
@@ -84,7 +84,7 @@ public final class StreamSupport {
         StreamList<?> list = (StreamList<?>) collection;
         int size = list.size();
         if (v > size) {
-            list.subList(size, (int) v).clear();
+            list.removeRange(size, (int) v);
         }
         return collection;
     }

@@ -26,4 +26,11 @@ public final class RecyclableStreamListProducer extends StreamListProducer {
         list.addAll(collection);
         return list;
     }
+
+    @Override
+    protected <E> StreamList<E> _newList(E[] es) {
+        StreamList<E> list = newList(es.length);
+        list.addAll(es);
+        return list;
+    }
 }

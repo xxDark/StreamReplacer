@@ -20,9 +20,15 @@ public abstract class StreamListProducer {
         return instance._newList(collection);
     }
 
+    public static <E> StreamList<E> newList(E[] es) {
+        return instance._newList(es);
+    }
+
     protected abstract <E> StreamList<E> _newList(int initialCapacity);
 
     protected abstract <E> StreamList<E> _newList(Collection<E> collection);
+
+    protected abstract <E> StreamList<E> _newList(E[] es);
 
     static {
         setProducer(new StreamListProducer() {
@@ -34,6 +40,11 @@ public abstract class StreamListProducer {
             @Override
             protected <E> StreamList<E> _newList(Collection<E> collection) {
                 return new StreamList<>(collection);
+            }
+
+            @Override
+            protected <E> StreamList<E> _newList(E[] es) {
+                return new StreamList<>(es);
             }
         });
     }

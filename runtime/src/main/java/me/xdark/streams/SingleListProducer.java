@@ -21,4 +21,13 @@ public final class SingleListProducer extends StreamListProducer {
         list.addAll(collection);
         return list;
     }
+
+    @Override
+    protected <E> StreamList<E> _newList(E[] es) {
+        StreamList<E> list = (StreamList<E>) this.list;
+        list.closed = false;
+        list.ensureCapacity(es.length);
+        list.addAll(es);
+        return list;
+    }
 }

@@ -17,7 +17,6 @@ public final class SingleListProducer extends StreamListProducer {
     protected <E> StreamList<E> _newList(Collection<E> collection) {
         StreamList<E> list = (StreamList<E>) this.list;
         list.closed = false;
-        list.ensureCapacity(collection.size());
         list.addAll(collection);
         return list;
     }
@@ -26,7 +25,6 @@ public final class SingleListProducer extends StreamListProducer {
     protected <E> StreamList<E> _newList(E[] es) {
         StreamList<E> list = (StreamList<E>) this.list;
         list.closed = false;
-        list.ensureCapacity(es.length);
         list.addAll(es);
         return list;
     }

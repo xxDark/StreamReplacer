@@ -1,5 +1,6 @@
 package me.xdark.streams;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,8 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("rawtypes")
 public final class StreamSupport {
-    private StreamSupport() { }
+    private StreamSupport() {
+    }
 
     public static <R> Collection<R> stream(Collection<R> collection) {
         return collection instanceof StreamList ? collection : StreamListProducer.newList(collection);
@@ -100,7 +102,7 @@ public final class StreamSupport {
     }
 
     public static long count(Collection<?> collection) {
-        return ((StreamList<?>)collection).size();
+        return ((StreamList<?>) collection).size();
     }
 
     public static <T> Iterator<T> iterator(Collection<T> collection) {
@@ -178,5 +180,12 @@ public final class StreamSupport {
             }
         }
         return true;
+    }
+
+    public static Object[] createCompatibleArray(Object[] a) {
+        if (a.getClass() != Object[].class) {
+            return Arrays.copyOf(a, a.length, Object[].class);
+        }
+        return a;
     }
 }

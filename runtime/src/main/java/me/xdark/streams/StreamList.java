@@ -30,16 +30,16 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
     }
 
     public StreamList(Collection<? extends E> c) {
-        elementData = c.toArray();
-        if ((size = elementData.length) != 0) {
-            if (elementData.getClass() != Object[].class)
-                elementData = Arrays.copyOf(elementData, size, Object[].class);
+        int j = c.size();
+        if (j == 0) {
+            elementData = EMPTY_ELEMENTDATA;
         } else {
-            this.elementData = EMPTY_ELEMENTDATA;
+            elementData = StreamSupport.createCompatibleArray(c.toArray());
+            size = j;
         }
     }
     public StreamList(E[] es) {
-        elementData = Arrays.copyOf(es, es.length, Object[].class);
+        elementData = StreamSupport.createCompatibleArray(es);
         size = es.length;
     }
 

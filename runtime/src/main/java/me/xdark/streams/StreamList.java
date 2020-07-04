@@ -60,12 +60,20 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
     }
 
     public void sort() {
-        Arrays.sort(this.elementData, 0, size);
+        // At least two elements must be compared
+        if (size < 2) {
+            return;
+        }
+        Arrays.sort(elementData, 0, size);
     }
 
     @Override
     public void sort(Comparator<? super E> comparator) {
-        Arrays.sort((E[])this.elementData, 0, size, comparator);
+        // At least two elements must be compared
+        if (size < 2) {
+            return;
+        }
+        Arrays.sort((E[])elementData, 0, size, comparator);
     }
 
     @Override

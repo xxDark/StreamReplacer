@@ -22,22 +22,39 @@ import java.util.function.Predicate;
 public final class StreamSupport {
     private StreamSupport() { }
 
-    public static <R> Collection<R> stream(Collection<R> collection) {
+    public static <T> Collection<T> stream(Collection<T> collection) {
         return collection instanceof StreamList ? collection : StreamListProducer.newList(collection);
     }
 
-    public static <R> Collection<R> empty() {
+    public static <T> Collection<T> empty() {
         return StreamListProducer.newList(0);
     }
 
-    public static <R> Collection<R> of(R r) {
-        StreamList<R> list = StreamListProducer.newList(1);
+    public static <T> Collection<T> of(T r) {
+        StreamList<T> list = StreamListProducer.newList(1);
         list.add(r);
         return list;
     }
 
-    public static <R> Collection<R> of(Object... rs) {
+    public static <T> Collection<T> of(Object... rs) {
         return (StreamList) StreamListProducer.newList(rs);
+    }
+
+    public static <T> StreamListBuilder<T> builder() {
+        return StreamListProducer.newBuilder();
+    }
+
+    public static <T> void accept(StreamListBuilder<T> builder, T value) {
+        builder.add(value);
+    }
+
+    public static <T> StreamListBuilder<T> add(StreamListBuilder<T> builder, T value) {
+        builder.add(value);
+        return builder;
+    }
+
+    public static <T> Collection<T> build(StreamListBuilder<T> builder) {
+        return builder.build();
     }
 
     public static <T, R> Collection<R> map(Collection collection, Function<? super T, ? super R> mapper) {

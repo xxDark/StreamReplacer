@@ -3,6 +3,10 @@ package me.xdark.streams;
 import me.xdark.streams.impl.AllMatchVisitor;
 import me.xdark.streams.impl.AnyMatchVisitor;
 import me.xdark.streams.impl.ArrayVisitor;
+import me.xdark.streams.impl.BuildVisitor;
+import me.xdark.streams.impl.BuilderAcceptVisitor;
+import me.xdark.streams.impl.BuilderAddVisitor;
+import me.xdark.streams.impl.BuilderVisitor;
 import me.xdark.streams.impl.CloseVisitor;
 import me.xdark.streams.impl.CollectionStreamVisitor;
 import me.xdark.streams.impl.ConcatVisitor;
@@ -78,6 +82,10 @@ public final class StreamTransformer {
         return new VisitTarget(collection, method, "()Ljava/util/stream/Stream;");
     }
 
+    private static VisitTarget builder(String name, String desc) {
+        return new VisitTarget("java/util/stream/Stream$Builder", name, desc);
+    }
+
     static {
         Map<VisitTarget, InstructionVisitor> visitorMap = VISITOR_MAP = new HashMap<>();
         visitorMap.put(stream("empty", "()Ljava/util/stream/Stream;"), new EmptyVisitor());
@@ -118,5 +126,10 @@ public final class StreamTransformer {
 
         visitorMap.put(stream("sorted", "()Ljava/util/stream/Stream;"), new NaturalSortVisitor());
         visitorMap.put(stream("sorted", "(Ljava/util/Comparator;)Ljava/util/stream/Stream;"), new SortVisitor());
+
+        visitorMap.put(stream("builder", "()Ljava/util/stream/Stream$Builder;"), new BuilderVisitor());
+        visitorMap.put(builder("accept", "(Ljava/lang/Object;)V"), new BuilderAcceptVisitor());
+        visitorMap.put(builder("add", "(Ljava/lang/Object;)Ljava/util/stream/Stream$Builder;"), new BuilderAddVisitor());
+        visitorMap.put(builder("build", "()Ljava/util/stream/Stream;"), new BuildVisitor());
     }
 }

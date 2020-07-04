@@ -4,6 +4,7 @@ import java.util.Collection;
 
 public final class SingleListProducer extends StreamListProducer {
     private final StreamList<?> list = new StreamList<>();
+    private final StreamListBuilder<?> builder = new StreamListBuilder<>();
 
     @Override
     protected <E> StreamList<E> _newList(int initialCapacity) {
@@ -27,5 +28,12 @@ public final class SingleListProducer extends StreamListProducer {
         list.closed = false;
         list.addAll(es);
         return list;
+    }
+
+    @Override
+    protected <E> StreamListBuilder<E> _newBuilder() {
+        StreamListBuilder<E> builder = (StreamListBuilder<E>) this.builder;
+        builder.list = newList(0);
+        return builder;
     }
 }

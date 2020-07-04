@@ -6,7 +6,6 @@ public final class UnsafeStreamListProducer extends StreamListProducer {
     @Override
     protected <E> StreamList<E> _newList(int initialCapacity) {
         StreamList<E> list = UnsafeAllocator.allocate(StreamList.class);
-        list.setSize(initialCapacity);
         list.setElementData(initialCapacity == 0 ? StreamList.EMPTY_ELEMENTDATA : new Object[initialCapacity]);
         return list;
     }
@@ -26,6 +25,13 @@ public final class UnsafeStreamListProducer extends StreamListProducer {
         list.setElementData(StreamSupport.createCompatibleArray(es));
         list.setSize(es.length);
         return list;
+    }
+
+    @Override
+    protected <E> StreamListBuilder<E> _newBuilder() {
+        StreamListBuilder<E> builder = UnsafeAllocator.allocate(StreamListBuilder.class);
+        builder.list = newList(StreamListBuilder.INITIAL_CAPACITY);
+        return builder;
     }
 
     static {

@@ -2,8 +2,8 @@ package me.xdark.streams;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,8 +20,7 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("rawtypes")
 public final class StreamSupport {
-    private StreamSupport() {
-    }
+    private StreamSupport() { }
 
     public static <R> Collection<R> stream(Collection<R> collection) {
         return collection instanceof StreamList ? collection : StreamListProducer.newList(collection);
@@ -103,6 +102,20 @@ public final class StreamSupport {
 
     public static long count(Collection<?> collection) {
         return ((StreamList<?>) collection).size();
+    }
+
+    public static <T> Collection<T> sorted(Collection<T> collection) {
+        StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
+        list.sort();
+        return list;
+    }
+
+    public static <T> Collection<T> sorted(Collection<T> collection, Comparator<? super T> comparator) {
+        StreamList<T> list = (StreamList<T>) collection;
+        list.checkMap();
+        list.sort(comparator);
+        return list;
     }
 
     public static <T> Iterator<T> iterator(Collection<T> collection) {

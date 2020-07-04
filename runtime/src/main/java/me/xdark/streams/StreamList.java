@@ -3,6 +3,7 @@ package me.xdark.streams;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
@@ -56,6 +57,15 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
             if (minCapacity - elementData.length > 0)
                 grow(minCapacity);
         }
+    }
+
+    public void sort() {
+        Arrays.sort(this.elementData, 0, size);
+    }
+
+    @Override
+    public void sort(Comparator<? super E> comparator) {
+        Arrays.sort((E[])this.elementData, 0, size, comparator);
     }
 
     @Override

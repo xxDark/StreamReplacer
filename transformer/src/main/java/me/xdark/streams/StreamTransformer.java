@@ -15,11 +15,13 @@ import me.xdark.streams.impl.ForEachVisitor;
 import me.xdark.streams.impl.IteratorVisitor;
 import me.xdark.streams.impl.LimitVisitor;
 import me.xdark.streams.impl.MapVisitor;
+import me.xdark.streams.impl.NaturalSortVisitor;
 import me.xdark.streams.impl.NoneMatchVisitor;
 import me.xdark.streams.impl.OnCloseVisitor;
 import me.xdark.streams.impl.PeekVisitor;
 import me.xdark.streams.impl.SingleVisitor;
 import me.xdark.streams.impl.SkipVisitor;
+import me.xdark.streams.impl.SortVisitor;
 import me.xdark.streams.impl.SpliteratorVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -113,5 +115,8 @@ public final class StreamTransformer {
         visitorMap.put(collectionStream("java/util/Collection", "stream"), new CollectionStreamVisitor());
         visitorMap.put(collectionStream("java/util/List", "stream"), new CollectionStreamVisitor());
         visitorMap.put(collectionStream("java/util/Set", "stream"), new CollectionStreamVisitor());
+
+        visitorMap.put(stream("sorted", "()Ljava/util/stream/Stream;"), new NaturalSortVisitor());
+        visitorMap.put(stream("sorted", "(Ljava/util/Comparator;)Ljava/util/stream/Stream;"), new SortVisitor());
     }
 }

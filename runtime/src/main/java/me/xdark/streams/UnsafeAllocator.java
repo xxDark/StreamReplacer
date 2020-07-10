@@ -35,7 +35,7 @@ public final class UnsafeAllocator {
         if (maybeThrowable instanceof Unsafe) {
             UNSAFE = (Unsafe) maybeThrowable;
         } else {
-            throw new ExceptionInInitializerError((String) maybeThrowable);
+            throw new ExceptionInInitializerError((Throwable) maybeThrowable);
         }
     }
 }

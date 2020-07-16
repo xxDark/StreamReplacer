@@ -1,14 +1,9 @@
 package me.xdark.streams;
 
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
@@ -179,6 +174,37 @@ public class StreamList<E> extends AbstractList<E> implements AutoCloseable {
     @Override
     public Stream<E> parallelStream() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean removeIf(Predicate<? super E> filter) {
+        int size = this.size;
+        if (size == 0) {
+            return false;
+        }
+        int removeCount = 0;
+        BitSet removeSet = new BitSet(size);
+        Object[] elementData = this.elementData;
+        for (int i=0; i < size; i++) {
+            E element = (E) elementData[i];
+            if (filter.test(element)) {
+                removeSet.set(i);
+                removeCount++;
+            }
+        }
+
+        boolean anyToRemove = removeCount > 0;
+        if (anyToRemove) {
+            int newSize = size - removeCount;
+            for (int i=0, j=0; (i < size) && (j < newSize); i++, j++) {
+                i = removeSet.nextClearBit(i);
+                elementData[j] = elementData[i];
+            }
+            Arrays.fill(elementData, newSize, size, null);
+            this.size = newSize;
+        }
+
+        return anyToRemove;
     }
 
     @Override

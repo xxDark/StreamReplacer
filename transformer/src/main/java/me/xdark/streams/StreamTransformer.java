@@ -12,6 +12,7 @@ import me.xdark.streams.impl.CollectionStreamVisitor;
 import me.xdark.streams.impl.ConcatVisitor;
 import me.xdark.streams.impl.CountVisitor;
 import me.xdark.streams.impl.EmptyVisitor;
+import me.xdark.streams.impl.FilterVisitor;
 import me.xdark.streams.impl.FindAnyVisitor;
 import me.xdark.streams.impl.FindFirstVisitor;
 import me.xdark.streams.impl.FlatMapVisitor;
@@ -53,7 +54,7 @@ public final class StreamTransformer {
                         visitor.visitInstruction(method, node);
                     }
                 } else if (insn instanceof TypeInsnNode && insn.getOpcode() == Opcodes.CHECKCAST) {
-                    String desc = ((TypeInsnNode)insn).desc;
+                    String desc = ((TypeInsnNode) insn).desc;
                     if ("java/util/stream/BaseStream".equals(desc) || "java/util/stream/Stream".equals(desc)) {
                         list.remove(insn);
                     }
@@ -94,6 +95,7 @@ public final class StreamTransformer {
         visitorMap.put(stream("map", "(Ljava/util/function/Function;)Ljava/util/stream/Stream;"), new MapVisitor());
         visitorMap.put(stream("forEach", "(Ljava/util/function/Consumer;)V"), new ForEachVisitor());
         visitorMap.put(stream("peek", "(Ljava/util/function/Consumer;)Ljava/util/stream/Stream;"), new PeekVisitor());
+        visitorMap.put(stream("filter", "(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;"), new FilterVisitor());
 
         visitorMap.put(base("onClose", "(Ljava/lang/Runnable;)Ljava/util/stream/BaseStream;"), new OnCloseVisitor());
         visitorMap.put(base("close", "()V"), new CloseVisitor());

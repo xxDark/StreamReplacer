@@ -69,13 +69,7 @@ public final class StreamSupport {
         if (j == 0) {
             return list;
         }
-
-        for (int i = 0; i < j; i++) {
-            if (filter.test(list.get(i))) {
-                list.remove(i--);
-                j -= 1;
-            }
-        }
+        list.removeIf(filter);
         return collection;
     }
 
@@ -169,12 +163,13 @@ public final class StreamSupport {
     public static <R, T> Collection<R> flatMap(Collection<T> collection, Function<? super T, ? extends Collection<? extends R>> mapper) {
         StreamList<T> list = (StreamList<T>) collection;
         list.checkMap();
-        for (int i = 0, j = list.size(); i < j; i++) {
+        int j = list.size(), k = j;
+        for (int i = 0; i < j; i++) {
             Collection<? extends R> s = mapper.apply(list.get(i));
-            list.remove(i--);
             list.addAll((Collection) s);
             j -= 1;
         }
+        list.removeRange(0, k);
         return (Collection<R>) list;
     }
 

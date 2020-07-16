@@ -69,7 +69,7 @@ public final class StreamSupport {
         if (j == 0) {
             return list;
         }
-        list.removeIf(filter);
+        list.removeIf(filter.negate());
         return collection;
     }
 

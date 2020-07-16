@@ -16,7 +16,7 @@ public final class UnsafeStreamListProducer extends StreamListProducer {
         StreamList<E> list = JavaUnsafe.allocate(StreamList.class);
         Object[] a = collection.toArray();
         list.setElementData(StreamSupport.createCompatibleArray(a));
-        list.setSize(collection.size());
+        list.setSize(a.length);
         return list;
     }
 

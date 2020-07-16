@@ -56,7 +56,7 @@ public final class JavaUnsafe {
                 throw new ExceptionInInitializerError(e);
             }
         } else {
-            throw new ExceptionInInitializerError((String) maybeThrowable);
+            throw new ExceptionInInitializerError((Throwable) maybeThrowable);
         }
     }
 }
